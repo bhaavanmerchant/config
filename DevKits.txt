@@ -1,0 +1,20 @@
+Autocad 2011 x64
+3DS MAX 2010 x64/x32
+Maya 2011
+Adobe CS5
+JDK windows
+Netbeans IDE
+Eclipse IDE
+Kodomo IDE
+Bluejay
+Office 2010
+
+SQL
+.NET Framework 4.0, Windows Sdk
+Visual Studio 2010
+WAMP
+OpenCV
+DirectX sdk
+Silverlight SDK
+AVR studio
+Proteus

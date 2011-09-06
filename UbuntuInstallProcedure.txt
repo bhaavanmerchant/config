@@ -1,0 +1,59 @@
+Set up a root account by the following method: ->
+
+
+
+
+
+
+
+Login in as root using username=root and password as the root pasword
+
+Go to my computers
+open filesystem
+rightclick and go 2 properties
+in permissions tab,
+allow create and modify file access 2 bha1 grp.
+logout and login as bha1
+and see in System->Adminstration that the group is the same
+
+
+instal: see devkitss in ubuntu,
+gimp
+CAD
+alienarena
+cs-like game 4 ubuntu
+gnometetris
+fourinrow
+aisleslot solitaire
+blackjack
+bomber
+extreme tux racer
+visualboyadvance
+mines
+assault cubelinuxdc
+eiskaltdc
+valknut dc
+nibbles
+wine
+vlc
+tofrodos
+suitable mp3 player and movieplayer: rhythmbox, banshee, mplayer, smplayer
+fspot(optional)
+compizconfig
+openoffice(if nt already der)
+firefox(if nt already der)
+nautilus(if nt already der)
+emerald(if nt already der)
+python
+gstreamer (codecs) (only if)
+ntfs-config
+gzip (only if)
+p7 (only if)
+7zip (only if)
+rar (only if)
+screensaver
+evince(alt docu viewer)
+rar (if nt self extracting)
+nvidea-common(only if)
+pulseaudio & alsamixer (only if)
+

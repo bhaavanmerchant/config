@@ -1,0 +1,9 @@
+parentProxy = "10.1.8.31:8080"
+daemonise=false
+diskCacheRoot=/var/cache/polipo/
+# proxyAddress=127.0.0.1
+# proxyName=localhost
+# serverSlots=4
+# serverMaxSlots=8
+# cacheIsShared=true
+# allowedClients=127.0.0.1

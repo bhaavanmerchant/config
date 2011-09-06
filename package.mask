@@ -1,0 +1,2 @@
+app-office/libreoffice
+sys-libs/glibc

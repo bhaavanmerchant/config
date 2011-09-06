@@ -1,0 +1,469 @@
+Install the Base System
+
+As root, run the installer script from tty1:
+
+# /arch/setup
+
+in packages, dont install
+iwlwifi
+rt2870
+rt2x00
+
+
+
+/etc/wgetrc
+https_proxy = http://10.1.8.31:8080/
+http_proxy = http://10.1.8.31:8080/
+
+# passwd
+
+Root password
+
+Finally, set a root password and make sure that you remember it later. Return to the main menu and continue with installing bootloader.
+
+
+
+# nano /etc/pacman.conf
+XferCommand = /usr/bin/wget --passive-ftp -c -O %o %u
+
+pacman -Syu
+
+# pacman -Syu curl polipo
+
+nano /etc/polipo/config
+
+parentProxy = "10.1.8.31:8080"
+
+
+# nano /etc/pacman.conf
+XferCommand = /usr/bin/curl -x 127.0.0.1:8123 -p %u > %o
+
+
+/etc/wgetrc
+https_proxy = http://127.0.0.1:8123/
+p_proxy = http://127.0.0.1:8123/
+
+
+
+# iwlist wlan0 scan
+
+
+# mv /etc/wpa_supplicant.conf /etc/wpa_supplicant.conf.original
+
+
+# wpa_passphrase linksys "my_secret_passkey" > /etc/wpa_supplicant.conf
+
+# iwconfig wlan0
+
+# dhcpcd wlan0
+
+
+cd to the /etc/pacman.d/ directory:
+
+# cd /etc/pacman.d
+
+Backup the existing /etc/pacman.d/mirrorlist:
+
+# cp mirrorlist mirrorlist.backup
+
+Edit mirrorlist.backup and uncomment all mirrors on the same continent or within geographical proximity to test with rankmirrors.
+
+# nano mirrorlist.backup
+
+Run the script against the mirrorlist.backup with the -n switch and redirect output to a new /etc/pacman.d/mirrorlist file:
+
+# rankmirrors -n 6 mirrorlist.backup > mirrorlist
+
+-n 6: rank the 6 closest mirrors
+
+Force pacman to refresh all package lists with the new mirrorlist in place:
+
+# pacman -Syy
+
+
+
+#gropus
+# useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner -s /bin/bash archie
+# useradd -m -g users -G disk,daemon,bin,sys,adm,wheel,log -s /bin/bash archie
+
+
+# passwd archie
+
+
+# pacman -S sudo
+
+
+# EDITOR=nano visudo
+# visudo
+%wheel	ALL=(ALL) ALL
+
+
+pacman -S git
+pacman -S alsa-plugins
+pacman -S alsa-utils
+
+Install the alsa-oss package if you want OSS applications to work with dmix:
+
+# pacman -S alsa-oss
+
+$ alsamixer
+
+
+packer -S packer
+packer -S polipo
+bashrc : http_proxy, https_proxy 127.0.0.1:8123
+
+
+# alsactl -f /var/lib/alsa/asound.state store
+# nano /etc/rc.conf
+DAEMONS=(syslog-ng network crond alsa)
+
+
+Step 1: Install
+
+The HAL daemon requires the D-Bus daemon to be running. Ensure both are installed:
+
+# pacman -S dbus
+
+The /etc/rc.conf DAEMONS array must be configured to start HAL (and dbus) at boot. There are generally 2 methods for configuring this.
+
+DAEMONS=(syslog-ng dbus hal network netfs ...)
+
+
+
+The configuration file /etc/dbus-1/system.d/hal.conf specifies HAL-specific privileges, i.e. which users have access to which interfaces. These are defined as exceptions to the overall restrictions imposed on using D-Bus interfaces, specified in /etc/dbus-1/system.conf. In short, you will need to see that hal.conf grants your user the right to access specific DBUS/HAL interfaces, because the D-Bus default is not to let you access them.
+
+pacman -S mpd mpc ncmpc ncmpcpp
+
+
+Install the base packages:
+
+# pacman -S xorg-server xorg-xinit
+
+Install mesa for 3D support:
+
+# pacman -S mesa
+
+The 3D utilities glxgears and glxinfo are included in the mesa-demos package, install if needed:
+
+# pacman -S mesa-demos
+
+
+pacman -S nvidia
+# pacman -S xf86-input-synaptics libsynaptics
+# pacman -S xf86-input-keyboard
+
+
+
+nvidia-xconfig
+
+
+
+Double check your /etc/X11/xorg.conf to make sure your default depth, horizontal sync, vertical refresh, and resolutions are acceptable. 
+
+
+
+
+CPU frequency scaling
+
+You probably want to use laptop-mode-utils with acpi.
+
+# pacman -S acpi acpid
+
+add to daemons
+
+
+
+pacman -S networkmanager
+
+pacman -S rox feh
+
+
+Daemon add
+
+acpid	Delivers ACPI events. 
+
+networkmanager	Combine with HAL to replace network, and provide configuration and detection for automatic network connections.
+
+# pacman -S ttf-dejavu and other fonts
+
+mouse config
+Frequently used options
+
+The following lists options that many users may wish to configure. Note that all these options can simply be added to the main configuration file in /etc/X11/xorg.conf.d/10-synaptics.conf, as shown in this example configuration file where we have enabled vertical, horizontal and circular scrolling:
+
+Section "InputClass"
+      Identifier "touchpad"
+      Driver "synaptics"
+      MatchIsTouchpad "on"
+             Option "TapButton1" "1"
+             Option "TapButton2" "2"
+             Option "TapButton3" "3"
+             Option "VertEdgeScroll" "on"
+             Option "VertTwoFingerScroll" "on"
+             Option "HorizEdgeScroll" "on"
+             Option "HorizTwoFingerScroll" "on"
+             Option "CircularScrolling" "on"
+             Option "CircScrollTrigger" "2"
+             Option "EmulateTwoFingerMinZ" "0"
+             ...
+EndSection
+
+    TapButton1: (integer) configures which mouse-button is reported on a non-corner, one finger tap.
+    TapButton2: (integer) configures which mouse-button is reported on a non-corner, two finger tap
+    TapButton3: (integer) configures which mouse-button is reported on a non-corner, three finger tap
+    RBCornerButton: (integer) configures which mouse-button is reported on a right bottom corner, one finger tap (use Option "RBCornerButton" "3" to achieve Ubuntu- style tap behaviour for right mouse button in lower right corner)
+    VertEdgeScroll: (boolean) enables vertical scrolling while dragging across the right edge of the touch pad.
+    HorizEdgeScroll: (boolean) enables horizontal scrolling while dragging across the right edge of the touch pad. 
+
+An example with a brief description of all options. As usual settings will vary between machines. It is recommended that you discover your own options using synclient. 
+
+$ sudo pacman -S xf86-input-synaptics libsynaptics
+
+
+Installation
+
+First, install the "base-devel" package, so that you won't miss utilities like gcc or make later on.
+
+# pacman -S base-devel
+
+pacman -Sy yaourt
+
+packer -S eiskaltdcpp
+
+pacman -S qt gtk // see appropriate pckges
+
+pacman -S php qtscriptgenerator
+
+pacman -S aspell
+
+pacman -S xorg-server xorg-xinit and other xorg things
+
+
+
+Setting up Icecast
+
+    Install Icecast via Pacman 
+
+ # pacman -S icecast
+
+    Edit the configuration file. 
+
+Open up /etc/icecast.xml in your text editor. The main section you want to pay attention to is <authentication>. Inside the <authentication> block are all the passwords that icecast use. I STRONGLY RECOMMEND you change them. Icecast defaults to listening on port 8000, and you may also change that if you wish.
+
+You will also want to uncomment the changeowner lines to switch to a user and group without root privileges. Remember to enable the chroot section:
+
+ <chroot>1</chroot>
+
+The default log path, /var/log/icecast, is not created automatically, so you will need to either create that folder and chown to the user in the changeowner lines, change the log path, or disable logging. Be aware that by turning changeowner on, all paths are relative to the home directory of that user. You will have to edit all paths manually. A good choice might be to create a new user "icecast" and set its home directory to /usr/share/icecast. Create there a directory "log" and don't forget to give the ownership to icecast.
+Icecast paths
+Global
+
+If you plan on running icecast globally (one per machine) change the paths section to the following:
+
+ <paths>
+     <basedir>/usr/share/icecast</basedir>
+     <logdir>/log</logdir>
+     <webroot>/web</webroot>
+     <adminroot>/admin</adminroot>
+ </paths>
+Running icecast
+
+    Start icecast 
+
+You can start icecast as a single user by executing:
+
+# icecast -b -c /etc/icecast.xml
+
+If you want icecast to remain in the foreground of your terminal, remove the -b flag.
+
+To run icecast as a system daemon:
+
+# /etc/rc.d/icecast start
+Step 2: Ensure Icecast is running
+
+# /etc/rc.d/icecast start
+
+Step 3: Configure MPD to be an Icecast Source
+
+Edit /etc/mpd.conf and enable the Icecast audio_output by adding the following:
+
+audio_output {
+    type        "shout"
+    encoding    "ogg"
+    name        "my cool stream"
+    host        "localhost"
+    port        "8000"
+    mount       "/mpd.ogg"
+
+# This is the source password in icecast.xml
+    password    "hackme"
+
+# Set either quality or bitrate
+#   quality     "5.0"
+    bitrate     "64"
+
+    format      "44100:16:1"
+
+# Optional Paramters
+    user        "source"
+#   description "here's my long description"
+#   genre       "jazz"
+} # end of audio_output
+
+# Need this so that mpd still works if icecast is not running
+audio_output {
+    type "alsa"
+    name "fake out"
+    driver "null"
+}
+
+Step 4: Running MPD with Icecast
+
+You can run both MPD and Icecast with the rc.d scripts:
+
+# /etc/rc.d/icecast start
+# /etc/rc.d/mpd start
+
+Note that icecast must be started first for the stream to work.
+
+The mplayer package is available in [extra]:
+
+# pacman -S mplayer
+
+
+2. Using a wrapper script
+
+The AUR contains a s trivial bash script called [mplayer-vdpau-auto] that detect which vc to use and when to use vo=vdpau. 
+
+packer -S mplayer-vdpau-auto
+
+IRC
+Xchat
+pacman -S notify-OSD
+pacman -S nmap
+
+packer rxvt-unicode-patched
+rxvt-unicode-patched is available in the AUR and includes a fix for the font width bug and adds support for ignoring window hints (to remove layout gaps in tiling window managers). 
+
+pacman -S xmobar dmenu
+
+pacman -S gmrun
+
+Starting xmonad
+
+To start xmonad automatically, simply add the command exec xmonad to your startup script (e.g. ~/.xinitrc). GDM and KDM users can create a new session file and then select xmonad from the appropriate Session menu.
+
+Recently, users in #xmonad have stated that the exec is not required; simply adding xmonad as the last line in your startup script is the proper way to start this WM. Please use whichever method works for you. If using ck-launch-session, the exec is probably still required.
+
+Note: By default, xmonad does not set an X cursor, therefore the "cross" cursor is usually displayed which can be confusing for new users (thinking that xmonad has not launched correctly). To set the expected left-pointer, add the following to your startup file (e.g. ~/.xinitrc):
+
+xsetroot -cursor_name left_ptr
+
+Example .xinitrc :
+
+ # set the cursor
+ xsetroot -cursor_name left_ptr
+
+If for some reason XMonad doesn't start, check if you have an .xmonad dir in your home dir else create it
+
+ mkdir ~/.xmonad
+
+Make a directory called ~/.xmonad, and in there, create a file named xmonad.hs. We'll start off with importing some of the utility modules we will use.
+
+
+
+
+
+pacman -S madwifi
+
+
+
+
+
+Creating .Xdefaults
+
+The file ~/.Xdefaults does not exist by default. To create it, open a terminal and type the following as a normal user:
+
+$ touch ~/.Xdefaults
+
+Being a plain-text file, you can edit your ~/.Xdefaults file with the text editor of your choice.
+Default settings
+
+
+pacman -S xclock
+
+xclock preferences
+
+Some basic xclock settings. See xclock man page for all X resources.
+
+ ! xclock ---------------------------------------------------------------------
+
+ xclock*update:            1
+ xclock*analog:            false
+ xclock*Foreground:        white
+ xclock*background:        black
+
+
+
+
+
+
+
+pacman -S openoffice-base
+pacman -S pstoedit poppler libmspack nss
+pacman -S gedit
+pacman -S acpid
+
+
+add acpid to daemon
+
+
+set alias for dc voulume up down fiefox 
+
+
+pacman -S xchat
+
+
+configure xmobar properly
+
+comment out hardware clock in /etc/rc.conf
+
+
+
+install bash-completion
+
+install xchat
+
+change proxy in xchat
+
+
+
+
+and in /etc/bash.bashrc
+
+export http_proxy=127.0.0.1:8123
+export https_proxy=127.0.0.1:8123
+alias dc=eiskaltdcpp-qt
+alias ff=firefox
+alias +='amixer set Master 5%+'
+alias _='amixer set Master 5%-'
+alias mp='ncmpcpp'
+alias dwn='cd /media/Data/Downloads'
+alias data='/media/Data'
+alias impress='/usr/lib/openoffice-beta/program/simpress'
+alias ppt='/usr/lib/openoffice-beta/program/simpress'
+alias calc='/usr/lib/openoffice-beta/program/scalc'
+alias spreadsheet='/usr/lib/openoffice-beta/program/scalc'
+alias writer='/usr/lib/openoffice-beta/program/swriter'
+alias office='/usr/lib/openoffice-beta/program/soffice'
+alias openoffice='/usr/lib/openoffice-beta/program/soffice'
+
+
+xmonad --recompile
+
+
+packer -S notify-osd-icons
+packer -S networkmanager-notify-osd
+
+pacman -S xmonad-contrib

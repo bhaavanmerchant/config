@@ -1,0 +1,6 @@
+urxvt*transparent:true
+urxvt*shading:40
+urxvt*background:Black
+urxvt*foreground:Green
+urxvt*scrollBar:false
+urxvt*saveLines:32767

@@ -1,0 +1,26 @@
+# 
+# /etc/fstab: static file system information
+#
+# <file system>        <dir>         <type>    <options>          <dump> <pass>
+devpts                 /dev/pts      devpts    defaults            0      0
+shm                    /dev/shm      tmpfs     nodev,nosuid        0      0
+
+#/dev/cdrom             /media/cd   auto    ro,user,noauto,unhide   0      0
+#/dev/dvd               /media/dvd  auto    ro,user,noauto,unhide   0      0
+#/dev/fd0               /media/fl   auto    user,noauto             0      0
+
+/dev/sda2 / ext4 defaults 0 1
+/dev/sda6 swap swap defaults 0 0
+
+
+#Windows
+/dev/sda8	/media/Data2	ntfs-3g	defaults	0	0
+
+#Data
+/dev/sda5	/media/Data	ntfs-3g	defaults	0	0
+
+#Ubuntu
+/dev/sda1	/media/Ubuntu	ext4	defaults	0	0
+
+#Sxryn
+/dev/sda7	/media/Syxryn	ext4	defaults	0	0
